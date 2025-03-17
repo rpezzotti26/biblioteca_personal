@@ -1,6 +1,19 @@
-import database
+from random import choice
 
 import database
+from database import get_db, add_book, update_book, delete_book, list_books, search_books
+from sqlalchemy.orm import Session
+
+
+import database
+
+def main():
+    database.create_tables()
+    while True:
+        # ... (menú y lógica principal)
+        if choice == "1":
+            add_book_cli()
+        # ... (otras opciones)
 
 def display_menu():
     """Muestra el menú principal."""
@@ -12,13 +25,14 @@ def display_menu():
     print("5. Buscar libros")
     print("6. Salir")
 
-def add_book():
-    """Solicita datos del libro y llama a database.add_book()."""
+def add_book_cli(db: Session = next(get_db())):
     titulo = input("Título: ")
     autor = input("Autor: ")
     genero = input("Género: ")
     estado_lectura = input("Estado (leído/no leído): ")
-    database.add_book(titulo, autor, genero, estado_lectura)
+    add_book(db, titulo, autor, genero, estado_lectura)
+
+# Modifica update_book_cli, delete_book_cli, list_books_cli y search_books_cli...
 
 def update_book():
     """Solicita datos del libro y llama a database.update_book()."""
@@ -53,3 +67,11 @@ def search_books():
             print(f"ID: {book[0]}, Título: {book[1]}, Autor: {book[2]}, Género: {book[3]}, Estado: {book[4]}")
     else:
         print("No se encontraron libros.")
+
+
+def search_books_cli():
+    return None
+
+
+def list_books_cli():
+    return None

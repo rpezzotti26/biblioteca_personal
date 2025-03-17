@@ -1,9 +1,46 @@
 import sqlite3
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Session
+
+DATABASE_URL = "mysql://usuario_biblioteca:contraseña_biblioteca@localhost/biblioteca_personal"
+engine = create_engine(DATABASE_URL)
+Base = declarative_base()
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 DATABASE_NAME = "biblioteca.db"
 
 import sqlite3
 
+class Libro(Base):
+    __tablename__ = "libros"
+    id = Column(Integer, primary_key=True, index=True)
+    titulo = Column(String)
+    autor = Column(String)
+    genero = Column(String)
+    estado_lectura = Column(String)
+
 DATABASE_NAME = "biblioteca.db"
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+def create_tables():
+    Base.metadata.create_all(bind=engine)
+
+def add_book(db: Session, titulo: str, autor: str, genero: str, estado_lectura: str):
+    db_book = Libro(titulo=titulo, autor=autor, genero=genero, estado_lectura=estado_lectura)
+    db.add(db_book)
+    db.commit()
+    db.refresh(db_book)
+    return db_book
+
+# Implementa las funciones update_book, delete_book, list_books y search_books...
 
 def create_connection():
     """Crea una conexión a la base de datos."""
